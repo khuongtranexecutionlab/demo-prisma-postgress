@@ -1,0 +1,23 @@
+Thông tin về các package:
+
+ - cross-env: Support cross platform.
+ - dot-env: Giúp config environment variable trong file .env và đưa vào process.env và file ts.
+ - express: Là backend framework như mình đề cập trước đó, hỗ trợ tạo REST API (GET, PUT, POST, PATCH, DELETE).
+ - rimraf: Thư viện hỗ trợ rm -rf cross-platform để xoá các file trong mục dist khi build lại app.
+
+
+Thông tin về các Script: 
+
+ - build sẽ được gọi lại ở vài command khác. Mục đích chính của command này là compile (đóng gói/ biên dịch) app của mình. Lệnh rimraf sẽ xoá hết các file của bản build cũ trong thư mục dist (ở trên chúng ta config thư mục này trong file tsconfig.json).
+ - predev sẽ gọi qua command build để clean lại thư mục dist, compile lại project bằng lệnh tsc. Lệnh này sẽ tự động được gọi trước khi command "dev" được gọi (npm run serve / yarn server trên localhost).
+ - dev dùng package cross-env để thiết lập NODE_ENV thành development. Bên cạnh đó sử dụng tsc --watch (TypeScript Compiler in “watch mode”), chế độ này sẽ build lại mỗi khi ta sửa code, output trong thư mục dist sẽ được compile lại, nodemon sẽ reload dist/index.js.
+ - prestart giống với predev, chuẩn bị output cho production.
+ - start lệnh này chạy app lên giống dev, nhưng không có theo dõi thay đổi, môi trường là production.
+ - test Chạy unit test, alright, mình nghĩ mình sẽ làm riêng 1 bài về nó sau nếu có thời gian, còn hiện tại có thể bỏ qua.
+ - deploy sẽ chạy prisma migrate để apply các migration còn thiếu vào db, sau đó mới chạy app bằng lệnh start (production), ở đây mình chuyển qua xài yarn cho tiện, vì nó có flag --pure-lockfile, nôm na sẽ cài dependencies theo file lock, tránh trường hợp lib bị update gây crash app.
+
+NOTE : Sửa DB_HOST trong file .env, như đã nói trước đó, phải sửa host cho trùng với id của service trong docker compose khi mình build bằng docker:
+binaryTargets = ["native", "linux-musl"] : binaryTargets để nó support linux
+
+
+Để có thể run project : docker-compose up --build
