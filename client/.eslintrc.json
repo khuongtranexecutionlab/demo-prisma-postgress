@@ -1,0 +1,32 @@
+{
+  "extends": [
+    "next/core-web-vitals",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:prettier/recommended"
+  ],
+  "plugins": ["@limegrass/import-alias"],
+
+  "rules": {
+    "prettier/prettier": "error",
+    "eqeqeq": ["error", "always"],
+    "@typescript-eslint/no-explicit-any": "warn",
+    "no-unused-vars": "off",
+    "no-param-reassign": ["error", { "props": false }],
+    "@typescript-eslint/no-unused-vars": ["error"],
+    "@typescript-eslint/no-empty-interface": ["error", { "allowSingleExtends": false }],
+    "@typescript-eslint/no-extra-non-null-assertion": ["error"],
+    "@typescript-eslint/no-for-in-array": ["error"],
+    "@typescript-eslint/no-non-null-asserted-optional-chain": ["error"],
+    "@typescript-eslint/no-non-null-assertion": ["error"],
+    "import/extensions": [2, { "tsx": "never", "ts": "never", "json": "always" }],
+    "no-use-before-define": ["error", { "variables": false }],
+    "import/named": "off",
+    "@next/next/no-img-element": "off",
+    "@limegrass/import-alias/import-alias": [
+      "error",
+      {
+        "relativeImportOverrides": [{ "path": ".", "depth": 0 }]
+      }
+    ]
+  }
+}

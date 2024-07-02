@@ -7,13 +7,19 @@ services:
       - POSTGRES_USER=${POSTGRES_USER:-postgres}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-password1}
     ports:
-      - "5432:5432"
+      - "2345:5432"
     restart: unless-stopped
 
   api:
-    container_name: postgres_prod
+    container_name: api_prod
     build: .
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - PRISMA_MIGRATE_SHADOW_DATABASE_URL=${PRISMA_MIGRATE_SHADOW_DATABASE_URL}
     ports:
-      - "3000:3000"
+      - "9090:9090"
     depends_on:
       - postgres
+    volumes:
+      - .:/app
+      - /app/node_modules

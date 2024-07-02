@@ -1,0 +1,31 @@
+html {
+  scroll-behavior: smooth;
+}
+body {
+  @apply overflow-x-hidden flex flex-col gap-2 container  text-dark bg-gray-100 p-2;
+  @apply lg:gap-4;
+  margin: 0 auto !important;
+}
+::-webkit-scrollbar {
+  width: 0.75rem;
+}
+
+::-webkit-scrollbar-track {
+  background: white;
+  border-radius: 2rem;
+  margin-block: 0.5rem;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-dark border-2 border-white rounded-2xl;
+}
+
+.template {
+  @apply flex flex-col gap-2;
+  @apply lg:gap-4;
+}
+
+.layout-legals {
+  @apply bg-white max-w-[768px] mx-auto rounded-2xl p-6 flex flex-col items-center gap-6;
+  @apply lg:p-8 lg:gap-8;
+}
