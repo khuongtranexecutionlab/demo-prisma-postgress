@@ -6,8 +6,18 @@ services:
       - POSTGRES_USER=${POSTGRES_USER:-postgres}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-password1}
     ports:
-      - "2345:5432"
+      - "5432:5432"
     restart: unless-stopped
+
+  api_shadow:
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_USER=demo_postgres
+      - POSTGRES_PASSWORD=demo_postgres2024
+      - POSTGRES_DB=demo_postgres_db
+    ports:
+      - 2345:5432
 
   api:
     container_name: api_prod
@@ -19,6 +29,7 @@ services:
       - "9090:9090"
     depends_on:
       - postgres
+      - api_shadow
     volumes:
       - .:/app
       - /app/node_modules

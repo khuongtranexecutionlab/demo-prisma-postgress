@@ -20,4 +20,10 @@ NOTE : Sửa DB_HOST trong file .env, như đã nói trước đó, phải sửa
 binaryTargets = ["native", "linux-musl"] : binaryTargets để nó support linux
 
 
-Để có thể run project : docker-compose up --build
+Step 1 : Cần prisma migrate dev , Step này dùng để migrate những model 
+Step 2 : docker-compose up --build 
+
+NOTE : Sau khi cập nhật model trong prisma chúng ta cần npx prisma migrate dev --name <migration_name>
+EXample : Thay <migration_name> bằng tên mô tả cho migration của bạn, ví dụ: add_image_to_user.
+
+Sau đó tạo lại Prisma Client npx prisma generate

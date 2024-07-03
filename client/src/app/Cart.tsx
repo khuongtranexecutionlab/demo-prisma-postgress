@@ -1,7 +1,7 @@
 'use client'
 import React, { useRef, useState } from 'react'
 
-const BikeStock: React.FC = () => {
+const Card: React.FC = () => {
   const cartRef = useRef<HTMLSpanElement>(null)
   const [cartShake, setCartShake] = useState(false)
 
@@ -60,7 +60,6 @@ const BikeStock: React.FC = () => {
 
   return (
     <div className="wrapper">
-      <h1>Bike Stock</h1>
       <span ref={cartRef}>
         <i className={`fas fa-shopping-cart  ${cartShake ? 'animate-shake' : ''}`}>a</i>
       </span>
@@ -91,4 +90,4 @@ const BikeStock: React.FC = () => {
   )
 }
 
-export default BikeStock
+export default Card

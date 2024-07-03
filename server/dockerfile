@@ -9,6 +9,7 @@ RUN mkdir /app
 WORKDIR /app
 ADD package.json yarn.lock .env data /app/
 ADD . /app
-RUN yarn --pure-lockfile && yarn playwright install && yarn playwright install-deps
+# RUN yarn --pure-lockfile && yarn playwright install && yarn playwright install-deps
+RUN yarn --pure-lockfile
 
 CMD ["yarn", "dev"] 

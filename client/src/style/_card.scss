@@ -1,0 +1,30 @@
+.wrapper-card {
+  @apply flex gap-5 relative;
+  padding-top: 10px;
+  border-bottom: 1px solid #c2c0c0;
+  padding-bottom: 10px;
+
+  .card-img {
+    @apply w-[100px] h-[100px] overflow-hidden rounded-md;
+  }
+
+  .card-body {
+    @apply flex flex-col;
+    h1 {
+      @apply font-bold text-xl;
+    }
+
+    .card-desc {
+      font-size: 13px;
+      color: #464646;
+      display: block;
+      padding-top: 5px;
+      line-height: 1.6em;
+      max-width: 600px;
+    }
+  }
+
+  button {
+    @apply absolute right-0 bottom-2 rounded-sm p-1 bg-blue-500 text-white h-[30px];
+  }
+}

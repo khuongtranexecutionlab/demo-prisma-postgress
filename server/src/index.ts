@@ -3,7 +3,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import userRoutes from './routes/userRoute';
 import postRoutes from './routes/postRoute';
-import crawRoutes from './routes/crawRoute';
+// import crawRoutes from './routes/crawRoute';
 import cors from 'cors';
 
 dotenv.config();
@@ -25,7 +25,7 @@ app.get('/', (req, res) => {
 
 app.use('/users', userRoutes);
 app.use('/posts', postRoutes);
-app.use('/craw', crawRoutes);
+// app.use('/craw', crawRoutes);
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);

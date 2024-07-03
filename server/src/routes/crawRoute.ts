@@ -1,9 +1,9 @@
-import { Router } from 'express';
-import {createMenu, readMenu} from '../controllers/crawController';
+// import { Router } from 'express';
+// import {createMenu, readMenu} from '../controllers/crawController';
 
-const router = Router();
+// const router = Router();
 
-router.get('/', createMenu);
-router.get('/menu', readMenu);
+// router.get('/', createMenu);
+// router.get('/menu', readMenu);
 
-export default router;
+// export default router;
