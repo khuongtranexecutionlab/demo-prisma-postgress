@@ -1,20 +1,21 @@
-import puppeteer from 'puppeteer';
+// import puppeteer from 'puppeteer';
 import ExcelJS from 'exceljs';
 import fs from 'fs';
+import { chromium } from 'playwright';
 import path from 'path';
 import { Request, Response } from 'express';
 
-export async function createMenu(req:Request,res:Response) {
+export async function createMenu(req: Request, res: Response) {
   const url = 'https://shopeefood.vn/ho-chi-minh/2seven-food-com-trua-van-phong';
 
-  console.log(`Launching Puppeteer`);
-  const browser = await puppeteer.launch();
+  console.log(`Launching Playwright`);
+  const browser = await chromium.launch();
   const page = await browser.newPage();
 
-  await page.goto(url, { waitUntil: 'networkidle2' });
+  await page.goto(url, { waitUntil: 'networkidle' });
 
   const data = await page.evaluate(() => {
-    const items: { title: string; desc: string|null ,image: string }[] = [];
+    const items: { title: string; desc: string | null; image: string }[] = [];
     const elements = document.querySelectorAll('div.item-restaurant-row');
     elements.forEach(element => {
       const titleElement = element.querySelector('h2.item-restaurant-name');
@@ -23,7 +24,7 @@ export async function createMenu(req:Request,res:Response) {
       const title = titleElement ? titleElement.textContent!.trim() : null;
       const desc = descElement && descElement.textContent!.trim();
       const image = imageElement ? imageElement.src : null;
-      if (title  && image) {
+      if (title && image) {
         items.push({ title, desc, image });
       }
     });
@@ -37,7 +38,7 @@ export async function createMenu(req:Request,res:Response) {
   }
 
   const filePath = path.resolve('.', 'data', 'crawled_data.xlsx');
-  
+
   const dir = path.dirname(filePath);
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true });
@@ -63,9 +64,8 @@ export async function createMenu(req:Request,res:Response) {
 
   await workbook.xlsx.writeFile(filePath);
 
-  res.status(200).json(`Data successfully exported to ${filePath}`)
+  res.status(200).json(`Data successfully exported to ${filePath}`);
 }
-
 
 export async function readMenu(req: Request, res: Response) {
   const filePath = path.resolve('.', 'data', 'crawled_data.xlsx');

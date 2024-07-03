@@ -13,7 +13,6 @@ dist/
 tmp-resolvers
 package-lock.json
 flow-typed
-yarn.lock
 javascript/**/migrations/
 typescript/**/migrations/
 misc/**/migrations/

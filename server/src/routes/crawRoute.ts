@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { createMenu ,readMenu} from '../controllers/crawController';
+import {createMenu, readMenu} from '../controllers/crawController';
 
 const router = Router();
 
