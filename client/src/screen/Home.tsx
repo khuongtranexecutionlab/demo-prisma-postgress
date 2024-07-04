@@ -1,8 +1,11 @@
+'use client'
 import { doSocialLogin, doLogout } from '@/app/actions'
 import Card from '@/components/Card'
 import { IMenuResponse } from '@/global/types'
 import React from 'react'
 import { type User } from 'next-auth'
+import Utils from '@/utils'
+import { useServiceContext } from '@/app/context/Socket'
 
 interface IHomeProps {
   data: IMenuResponse[] | undefined
@@ -10,6 +13,17 @@ interface IHomeProps {
 }
 
 const Home: React.FC<IHomeProps> = ({ data, auth }) => {
+  const { socket } = useServiceContext()
+
+  Utils.useDidMount(
+    () => {
+      if (socket && auth) {
+        socket?.emit('joinRoom', auth.id)
+      }
+    },
+    undefined,
+    [auth?.id]
+  )
   return (
     <div className="wrapper-home">
       {!auth ? (
@@ -33,7 +47,7 @@ const Home: React.FC<IHomeProps> = ({ data, auth }) => {
       <div>{auth?.name}</div>
       <div style={{ maxWidth: 880, margin: '0 auto' }}>
         {data?.map((i, idx) => (
-          <Card data={i} key={idx} />
+          <Card data={i} key={idx} userID={auth?.id} />
         ))}
       </div>
     </div>

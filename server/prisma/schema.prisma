@@ -10,18 +10,22 @@ datasource db {
 }
 
 model User {
-  id    String  @id @default(uuid())
-  name  String
-  email String  @unique
-  image String
-  Order Order[]
+  id     String  @id @default(uuid())
+  name   String
+  email  String  @unique
+  image  String?
+  admin  Boolean @default(false)
+  orders Order[]
 }
 
 model Order {
   id        String   @id @default(uuid())
   title     String
   content   String
-  userId    String
+  user_id   String
+  price     Int      @default(0)
+  paid      Boolean  @default(false)
+  image     String?
   createdAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [user_id], references: [id])
 }

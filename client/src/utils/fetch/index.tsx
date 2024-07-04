@@ -34,57 +34,6 @@ export function Head<T>(apiPath: string) {
   return call<T>(Method.Head, apiPath)
 }
 
-// async function call<T>(method: string, apiPath: string, data: object = {}, header?: object) {
-//     let requestInit = {
-//         method: method,
-//         credentials: 'include',
-//         headers: {
-//             Accept: 'application/json',
-//             'Content-Type': 'application/json',
-//         },
-//         body: null,
-//     } as RequestInit
-
-//     if (method !== Method.Get
-//         && method !== Method.Head)
-//         requestInit.body = JSON.stringify(data)
-
-//     const response = await fetch(`https://fullstack-mern-server.onrender.com${apiPath}`, requestInit);
-
-//     if (response.status === 401) {
-//         await fetch(`https://fullstack-mern-server.onrender.com/api/auth/refreshtoken`)
-
-//     } else {
-//         let body = await response.text();
-//         let data_1: IResponse<T> | null = null;
-//         if (body) {
-//             data_1 = JSON.parse(body, (key, value_1) => {
-//                 if (value_1) {
-//                     let s = value_1 as string;
-
-//                     if (s.indexOf && s.endsWith)
-//                         if (s.indexOf('T') && s.endsWith('Z')) {
-//                             let d = new Date(value_1);
-
-//                             if (d instanceof Date && !isNaN(d.getTime()))
-//                                 return d;
-//                         }
-//                 }
-
-//                 return value_1;
-//             });
-
-//             if (data_1 && (data_1.success === undefined
-//                 || data_1.success === null)
-//                 && (data_1.error === undefined
-//                     || data_1.error === null))
-//                 data_1.success = true;
-
-//             return data_1;
-//         }
-//     }
-// }
-
 // Define an array of functions that returns a promise
 let request: Promise<any> | null = null
 // Flag to check if the token is being refreshed
@@ -108,7 +57,7 @@ async function call<T>(method: string, apiPath: string, data: object = {}, heade
   }
 
   // Call the API with the specified method and API path
-  let response = await fetch(`${ENDPOINT_SERVICE + apiPath}`, requestInit)
+  let response = await fetch(`http://${ENDPOINT_SERVICE + apiPath}`, requestInit)
 
   // If the response status is 401 (Unauthorized), check if the token is being refreshed
   if (response.status === 401) {
@@ -117,14 +66,10 @@ async function call<T>(method: string, apiPath: string, data: object = {}, heade
     let re = await request
     request = null
 
-    if (re.success) response = await fetch(`${ENDPOINT_SERVICE + apiPath}`, requestInit)
+    if (re.success) response = await fetch(`http://${ENDPOINT_SERVICE + apiPath}`, requestInit)
     else throw new Error('')
   }
-  // If the response status is not 401 (Unauthorized), handle the token and return the result of the data processing
-  // Process the data in the response and convert date string fields to Date objects
-  // Add a success field if it is missing from the data
-  // Return the processed data
-  // ...
+
   let body = await response.text()
   let data_1: IResponse<T> | null = null
   if (body) {

@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect } from 'react'
+import React from 'react'
 import { motion, AnimatePresence, LazyMotion, domAnimation } from 'framer-motion'
 
 const RootTemplate = ({ children }: { children: React.ReactNode }) => {

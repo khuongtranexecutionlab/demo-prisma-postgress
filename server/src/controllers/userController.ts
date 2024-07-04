@@ -1,53 +1,69 @@
-import { Request, Response } from 'express';
-import { PrismaClient } from '@prisma/client';
+import { Request, Response } from "express";
+import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
 export const createUser = async (req: Request, res: Response) => {
-    try {
-    const { name, email, image} = req.body;
-    console.log(req.body)
+  try {
+    const { name, email, image } = req.body;
     const user = await prisma.user.create({
       data: {
         name,
         email,
-        image
+        image,
       },
     });
-      res.json(user);
-    } catch (error) {
-      console.error("Error creating user:", error);
-      res.status(500).json({ error: "Failed to create user", });
-    }
-  };
+    res.json(user);
+  } catch (error) {
+    console.error("Error creating user:", error);
+    res.status(500).json({ error: "Failed to create user" });
+  }
+};
 
 export const getUsers = async (req: Request, res: Response) => {
   try {
-    const data = await prisma.user.findMany();
-    res.json({data});
+    const data = await prisma.user.findMany({
+      include: {
+        orders: true,
+      },
+    });
+    res.json({ data });
   } catch (error) {
-    console.log(error)
+    console.log(error);
     res.status(500).json({ error: "Failed to fetch users" });
   }
 };
 
-// export const createUserWithPosts = async (req: Request, res: Response) => {
+export const getMe = async (req: Request, res: Response) => {
+  const { email } = req.params;
+  try {
+    const data = await prisma.user.findUnique({
+      where: { email },
+    });
+    res.json({ data });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Failed to fetch users" });
+  }
+};
+
+// export const createUserOrder = async (req: Request, res: Response) => {
 //   try {
-//     const { name, email, posts } = req.body;
+//     const { name, email, order} = req.body;
+
 //     const user = await prisma.user.create({
 //       data: {
 //         name,
 //         email,
-//         posts: {
-//           create: posts,
+//         orders: {
+//           create: order,
 //         },
 //       },
-//       include: {
-//         posts: true,
-//       },
 //     });
-//     res.json(user);
+
+//     res.json({user});
 //   } catch (error) {
+//     console.log(error)
 //     res.status(500).json({ error: "Failed to create user with posts" });
 //   }
 // };
