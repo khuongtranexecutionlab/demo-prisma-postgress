@@ -12,7 +12,7 @@ export default async function app() {
     if (response)
       response.push({
         title: 'Salad trộn dầu giấm ăn kèm',
-        description: 'Description for Salad trộn dầu giấm ăn kèm',
+        description: '',
         image: 'assests/sallad.webp',
       })
   } catch (error) {
@@ -29,7 +29,12 @@ export default async function app() {
             title: i.title,
             description: i.description,
             image: i.image,
-            price: i.title === 'Trứng Ốp La' || i.title === 'Sald' ? 5000 : 30000,
+            price:
+              i.title === 'Trứng ốp la'
+                ? 5000
+                : i.title === 'Salad trộn dầu giấm ăn kèm'
+                ? 15000
+                : 30000,
           }))}
         auth={session?.user}
       />

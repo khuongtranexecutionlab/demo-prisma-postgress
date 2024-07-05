@@ -35,6 +35,7 @@ const Card: React.FC<ICardProps> = ({ data, userID }) => {
       <div className="card-body">
         <h1 className="card-title">{data?.title}</h1>
         <div className="card-desc">{data?.description}</div>
+        <div className="card-desc">{data?.price}</div>
       </div>
       {userID && <button onClick={handleClick}>Order</button>}
     </div>
