@@ -1,12 +1,17 @@
 import { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
 import { readItemsFromExcel } from "../utils/Excel";
+import { create } from "../repository/orderRepository";
 
 const prisma = new PrismaClient();
 
 export const createOrder = async (req: Request, res: Response) => {
   try {
-    const { title, content, user_id, price } = req.body;
+    const { title } = req.body;
+    const emailDomain = req.user?.email.split("@")[1];
+    // if (emailDomain !== "executionlab.asia")
+    //   return res.status(403).json({ error: "Your email is not authorized !" });
+
     const items = await readItemsFromExcel();
     const itemExists = items.find(
       (item) => item.title.toLowerCase() === title.toLowerCase(),
@@ -14,14 +19,7 @@ export const createOrder = async (req: Request, res: Response) => {
     if (!itemExists) {
       return res.status(400).json({ error: "Item does not exist" });
     }
-    const order = await prisma.order.create({
-      data: {
-        title,
-        content,
-        user_id,
-        price,
-      },
-    });
+    const order = await create(req);
     res.json(order);
   } catch (error) {
     console.log(error);

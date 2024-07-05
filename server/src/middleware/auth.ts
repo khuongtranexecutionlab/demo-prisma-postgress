@@ -1,38 +1,38 @@
+// middleware/auth.ts
+import { PrismaClient } from "@prisma/client";
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
-
-interface UserPayload {
-  id: string;
-  admin: boolean;
-}
+const prisma = new PrismaClient();
 
 export const authenticateJWT = (
   req: Request,
   res: Response,
   next: NextFunction,
 ) => {
-  const authHeader = req.headers.authorization;
-  if (authHeader) {
-    const token = authHeader.split(" ")[1];
-    jwt.verify(token, process.env.JWT_SECRET as string, (err, user) => {
-      if (err) {
-        return res.sendStatus(403);
-      }
-      req.user = user as UserPayload;
-      next();
-    });
+  const token = req.cookies["authjs.session-token"];
+
+  if (token) {
+    jwt.verify(
+      token,
+      process.env.AUTH_SECRET as string,
+      (err: any, decodedToken: any) => {
+        if (err) {
+          console.error("JWT Verification Error:", err);
+          return res.sendStatus(403);
+        }
+        prisma.user
+          .findUnique({
+            where: { email: decodedToken.user.email },
+          })
+          .then((i) => {
+            req.user = i;
+            next();
+          })
+          .catch(() => res.sendStatus(400));
+      },
+    );
   } else {
+    console.error("No token found");
     res.sendStatus(401);
   }
-};
-
-export const authorizeAdmin = (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  if (!req.user.admin) {
-    return res.sendStatus(403);
-  }
-  next();
 };

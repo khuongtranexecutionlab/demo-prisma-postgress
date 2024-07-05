@@ -1,10 +1,9 @@
 'use client'
 import React from 'react'
 import { createContext, ReactNode, useContext } from 'react'
-import { Socket } from 'socket.io-client'
-import { Session } from 'next-auth'
 import { useSocket } from './hook'
 import { IUser } from '@/global/types'
+import { Socket } from 'socket.io-client'
 
 export interface IServiceContextState {
   socket: Socket | undefined

@@ -1,5 +1,5 @@
-import * as path from "path";
 import * as ExcelJS from "exceljs";
+import * as path from "path";
 
 export async function readItemsFromExcel(): Promise<any[]> {
   const filePath = path.resolve(".", "data", "crawled_data.xlsx");

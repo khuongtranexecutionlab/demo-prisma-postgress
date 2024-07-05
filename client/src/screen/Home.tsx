@@ -6,6 +6,7 @@ import React from 'react'
 import { type User } from 'next-auth'
 import Utils from '@/utils'
 import { useServiceContext } from '@/app/context/Socket'
+import { ENDPOINT_SERVICE } from '@/global/constant'
 
 interface IHomeProps {
   data: IMenuResponse[] | undefined

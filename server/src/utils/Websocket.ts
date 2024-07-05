@@ -63,13 +63,13 @@ export class Websocket extends Server {
         const cookies: { [key: string]: string } = parseCookies(
           socket.request.headers.cookie,
         );
-        if (cookies.accessToken) {
+        if (cookies["authjs.session-token"]) {
           jwt.verify(
-            cookies.accessToken,
+            cookies["authjs.session-token"],
             `${process.env.AUTH_SECRET}`,
             function (err, decoded) {
               if (err) return next(new Error("Authentication error"));
-              socket.user = decoded;
+              socket.user = (decoded as any).user;
               next();
             },
           );

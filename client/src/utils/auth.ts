@@ -1,6 +1,8 @@
 import NextAuth, { User } from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
 import Utils from '.'
+import jwt from 'jsonwebtoken'
+import { JWTDecodeParams } from 'next-auth/jwt'
 
 export const {
   handlers: { GET, POST },
@@ -21,6 +23,21 @@ export const {
       },
     }),
   ],
+  secret: process.env.AUTH_SECRET,
+  session: {
+    strategy: 'jwt',
+  },
+  jwt: {
+    async encode({ secret, token }: any) {
+      return jwt.sign(token, secret, { algorithm: 'HS256' })
+    },
+    async decode(params: JWTDecodeParams) {
+      if (params.token && params.secret)
+        return jwt.verify(params.token, params.secret as jwt.Secret, { algorithms: ['HS256'] })
+
+      return params as any
+    },
+  },
   callbacks: {
     async jwt({ token, user, account }: any) {
       // Initial sign in
@@ -46,42 +63,29 @@ export const {
         session.user = token.user
         session.accessToken = token.accessToken
         session.error = token.error
-        await Utils.call
-          .get<User[]>('/users')
-          .then(async (response) => {
-            if (response?.success) {
-              const userExists = response.data.some((u) => u.email === token.user.email)
-              if (!userExists) {
-                const emailDomain = token.user.email.split('@')[1]
-                if (emailDomain !== 'executionlab.asia') {
-                  Utils.call.post('/users/create', { ...token.user })
-                } else {
-                  console.log('Email domain is not @executionlab.asia')
-                }
-              } else
-                await Utils.call
-                  .get<{ admin: boolean; id: string }>('/users/' + session.user.email)
-                  .then((i) => {
-                    if (i?.success) {
-                      session.role = i?.data.admin
-                      session.user.id = i?.data.id
-                    }
-                  })
-            }
-          })
-          .catch((error) => {
-            console.error('Error fetching users:', error)
-          })
+        const emailDomain = token.user.email.split('@')[1]
+        // if (emailDomain !== 'executionlab.asia') {
+        // await Utils.call.post('/users/create', { ...token.user }).then(async (i) => {
+        //   if (i?.error)
+        //     await Utils.call
+        //       .get<{ admin: boolean; id: string }>('/users/' + session.user.email)
+        //       .then((i) => {
+        //         if (i?.success) {
+        //           session.role = i?.data.admin
+        //           session.user.id = i?.data.id
+        //         }
+        //       })
+        //       .catch((error) => {
+        //         console.error('Error fetching users:', error)
+        //       })
+        //   else {
+        //     return null
+        //   }
+        // })
       }
-      console.log(session)
       return session
     },
   },
-  session: {
-    strategy: 'jwt',
-  },
-
-  secret: process.env.AUTH_SECRET,
 })
 
 async function refreshAccessToken(token: any) {
