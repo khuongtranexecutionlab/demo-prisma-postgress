@@ -21,6 +21,7 @@
       padding-top: 5px;
       line-height: 1.6em;
       max-width: 600px;
+      @apply hidden md:flex flex-wrap;
     }
   }
 

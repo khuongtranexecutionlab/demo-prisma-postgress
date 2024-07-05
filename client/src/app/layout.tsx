@@ -1,8 +1,20 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.scss'
+import { ShoppingCartProvider } from '@/context/ShoppingCartContext'
+import ShoppingCart from '@/components/ShoppingCart'
 
-const inter = Inter({ subsets: ['latin'] })
+const fontHeading = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-heading',
+})
+
+const fontBody = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-body',
+})
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -16,7 +28,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={(fontHeading.variable, fontBody.variable, 'antialiased')}>
+        <ShoppingCartProvider>
+          <ShoppingCart />
+
+          {children}
+        </ShoppingCartProvider>
+      </body>
     </html>
   )
 }

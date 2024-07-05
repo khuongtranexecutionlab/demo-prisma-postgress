@@ -4,6 +4,7 @@ export interface IMenuResponse {
   title: string
   image: string
   description: string
+  price?: number
 }
 
 export type IUser = Session & {

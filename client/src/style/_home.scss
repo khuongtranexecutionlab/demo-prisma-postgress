@@ -1,0 +1,20 @@
+.wrapper_home {
+  @apply flex flex-col md:flex-row p-4 space-x-4 min-h-screen bg-white;
+
+  .wrapper_information {
+    @apply w-auto p-4 h-full rounded-md bg-gray-100 order-last;
+    @apply md:order-first;
+
+    h2 {
+      @apply mb-4 text-lg font-bold text-red-500;
+    }
+
+    ul {
+      @apply space-y-2;
+    }
+  }
+
+  .wrapper_menu {
+    @apply flex-1 p-4 bg-gray-50;
+  }
+}
