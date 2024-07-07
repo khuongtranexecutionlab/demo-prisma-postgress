@@ -1,10 +1,8 @@
 import Utils from '@/utils'
 
 interface ICreateOrder {
-  title: string
-  content: string
-  price: number
-  user_id: string
+  total: number
+  items: { title: string; price: number }[]
 }
 
 export const createOrder = async (data: ICreateOrder, loading?: React.Dispatch<boolean>) => {

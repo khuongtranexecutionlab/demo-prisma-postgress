@@ -63,26 +63,23 @@ export const {
         session.user = token.user
         session.accessToken = token.accessToken
         session.error = token.error
-        const emailDomain = token.user.email.split('@')[1]
-        if (emailDomain !== 'executionlab.asia') {
-          await Utils.call.post('/users/create', { ...token.user }).then(async (i) => {
-            if (i?.error)
-              await Utils.call
-                .get<{ admin: boolean; id: string }>('/users/' + session.user.email)
-                .then((i) => {
-                  if (i?.success) {
-                    session.role = i?.data.admin
-                    session.user.id = i?.data.id
-                  }
-                })
-                .catch((error) => {
-                  console.error('Error fetching users:', error)
-                })
-            else {
-              return null
+        await Utils.call
+          .get<{ admin: boolean; id: string }>('/users/' + session.user.email)
+          .then(async (i) => {
+            if (i?.success) {
+              session.role = i?.data.admin
+              session.user.id = i?.data.id
+            } else {
+              const emailDomain = token.user.email.split('@')[1]
+              if (emailDomain !== 'executionlab.asia' && !session.role) {
+                await Utils.call.post('/users/create', { ...token.user }).then()
+              }
             }
           })
-        }
+          .catch((error) => {
+            console.error('Error fetching users:', error)
+          })
+
         return session
       }
     },

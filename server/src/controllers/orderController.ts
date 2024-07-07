@@ -7,18 +7,28 @@ const prisma = new PrismaClient();
 
 export const createOrder = async (req: Request, res: Response) => {
   try {
-    const { title } = req.body;
+    const { items } = req.body;
     const emailDomain = req.user?.email.split("@")[1];
     // if (emailDomain !== "executionlab.asia")
     //   return res.status(403).json({ error: "Your email is not authorized !" });
 
-    const items = await readItemsFromExcel();
-    const itemExists = items.find(
-      (item) => item.title.toLowerCase() === title.toLowerCase(),
+    const menu = await readItemsFromExcel();
+    const isItemInMenu = (title: string) => {
+      return menu.some(
+        (item) => item.title.toLowerCase() === title.toLowerCase(),
+      );
+    };
+
+    const allItemsExist = items.every((item: { title: string }) =>
+      isItemInMenu(item.title),
     );
-    if (!itemExists) {
-      return res.status(400).json({ error: "Item does not exist" });
+
+    if (!allItemsExist) {
+      return res
+        .status(400)
+        .json({ error: "One or more items do not exist in the menu" });
     }
+
     const order = await create(req);
     res.json(order);
   } catch (error) {

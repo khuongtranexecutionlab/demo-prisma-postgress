@@ -4,13 +4,14 @@ import { Request } from "express";
 const prisma = new PrismaClient();
 
 const createOrder = async (req: Request) => {
-  const { title, content, price } = req.body;
+  const { total, items } = req.body;
   const order = await prisma.order.create({
     data: {
-      title,
-      content,
-      user_id: req.user!.id,
-      price,
+      user_id: req.user?.id!,
+      total,
+      items: {
+        create: items,
+      },
     },
   });
   return order;

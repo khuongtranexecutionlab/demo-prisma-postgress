@@ -6,11 +6,27 @@ import { doLogout, doSocialLogin } from '@/app/actions'
 import { headers } from 'next/headers'
 import { useSession } from 'next-auth/react'
 import { User } from 'next-auth'
+import { usePathname } from 'next/navigation'
 export default function Navbar() {
   const { data: session, update } = useSession()
   // useState and useEffect are used to only render the UI
   // after the session is retrieved
   const [data, setData] = React.useState<IUser | undefined>(undefined)
+  const [active, setActive] = React.useState<string>('')
+
+  const pathname = usePathname()
+
+  React.useEffect(() => {
+    if (pathname === '/') {
+      setActive('Menu')
+    }
+    if (pathname === '/history') {
+      setActive('Lịch sử')
+    }
+    if (pathname === '/prof') {
+      setActive('Thanh toán')
+    }
+  }, [pathname])
 
   React.useEffect(() => {
     if (session && session.user) {
@@ -50,8 +66,9 @@ export default function Navbar() {
       </div>
 
       <div className="flex space-x-5 text-lg ">
-        <NavItem route="/history" name="Lịch sử" />
-        <NavItem route="/projects" name="Thanh toán" />
+        <NavItem active={active} setActive={setActive} route="/" name="Menu" />
+        <NavItem active={active} setActive={setActive} route="/history" name="Lịch sử" />
+        <NavItem setActive={setActive} active={active} route="/prof" name="Thanh toán" />
       </div>
     </div>
   )

@@ -16,6 +16,7 @@ import { MdOutlineShoppingCart, MdClose } from 'react-icons/md'
 import BottomRightShoppingCartIcon from './BottomRightShoppingCartIcon'
 import { useShoppingCart } from '@/context/ShoppingCartContext'
 import Utils from '@/utils'
+import { createOrder } from '@/repositories'
 
 function ShoppingCart() {
   const [isClicked, setIsClicked] = React.useState(false)
@@ -34,6 +35,12 @@ function ShoppingCart() {
 
   async function handleButtonClick() {
     setIsClicked(false)
+    console.log(items)
+    if (items)
+      await createOrder({
+        total: Number(totalPrice),
+        items: items.map((i) => ({ title: i.title, price: i.price! })),
+      })
   }
 
   return (
