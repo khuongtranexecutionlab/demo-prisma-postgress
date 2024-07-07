@@ -1,62 +1,86 @@
-.wrapper {
-  width: 705px;
-  margin: 20px auto;
-  padding: 20px;
-}
-h1 {
-  display: inline-block;
-  background-color: #333;
-  color: #fff;
-  font-size: 20px;
-  font-weight: normal;
-  text-transform: uppercase;
-  padding: 4px 20px;
-  float: left;
-}
-.clear {
-  clear: both;
-}
-.items {
-  display: block;
-  margin: 20px 0;
-}
-.item {
-  background-color: #fff;
-  float: left;
-  margin: 0 10px 10px 0;
-  width: 205px;
-  padding: 10px;
-  height: 290px;
-}
-.item img {
-  display: block;
-  margin: auto;
-}
-h2 {
-  font-size: 16px;
-  display: block;
-  border-bottom: 1px solid #ccc;
-  margin: 0 0 10px 0;
-  padding: 0 0 5px 0;
-}
-button {
-  border: 1px solid #722a1b;
-  padding: 4px 14px;
-  background-color: #fff;
-  color: #722a1b;
-  text-transform: uppercase;
-  float: right;
-  margin: 5px 0;
-  font-weight: bold;
-  cursor: pointer;
-}
-span {
-  float: right;
-}
-.shopping-cart {
-  display: inline-block;
-  background: url('http://cdn1.iconfinder.com/data/icons/jigsoar-icons/24/_cart.png') no-repeat 0 0;
-  width: 24px;
-  height: 24px;
-  margin: 0 10px 0 0;
+.wrapper_cart {
+  .toogle {
+    @apply hidden cursor-pointer bg-[rgba(0,0,0,0.4)] fixed inset-0 z-40 backdrop-blur-md p-4 lg:flex justify-end;
+  }
+  .toggle {
+    @apply hidden cursor-pointer bg-[rgba(0,0,0,0.4)] fixed inset-0 z-30 backdrop-blur-md p-4 justify-end;
+    @apply lg:flex;
+  }
+  .content {
+    @apply fixed z-40 w-full lg:w-2/5 h-full right-0 top-0 lg:p-4;
+
+    aside {
+      @apply bg-white h-full flex flex-col lg:rounded-2xl;
+
+      .heading {
+        @apply flex justify-between px-4 py-3 lg:p-6 shrink-0;
+
+        .order-title {
+          @apply flex items-center gap-2 grow text-[1.5rem];
+        }
+
+        button {
+          @apply hover:bg-gray-100 active:bg-gray-200 transition active:shadow-inner bg-white w-[3rem] h-[3rem] text-[1.5rem] flex justify-center items-center rounded-full;
+        }
+      }
+
+      .wrapper_list {
+        @apply flex flex-col grow overflow-hidden;
+
+        ul {
+          @apply shadow-inner p-2 lg:p-6 flex flex-col gap-2 lg:gap-4 bg-gray-100 overflow-y-auto overflow-x-hidden grow;
+
+          .items {
+            @apply relative shadow-md p-6 flex flex-col gap-2 bg-white rounded-2xl overflow-hidden;
+
+            .remove {
+              @apply relative flex justify-between items-center;
+
+              .title {
+                @apply flex flex-col;
+
+                span {
+                  @apply text-[1.25rem] hover:underline;
+                }
+              }
+              .button_action {
+                @apply active:shadow-inner active:bg-gray-200 hover:bg-gray-100 hover:text-red-500 transition bg-white w-[2.5rem] h-[2.5rem] text-[1.5rem] flex justify-center items-center rounded-full;
+              }
+            }
+          }
+
+          .info_item {
+            @apply relative flex justify-between items-center;
+
+            div {
+              @apply flex items-center gap-2;
+              .icons {
+                @apply hover:bg-gray-100 w-[2.25rem] h-[2.25rem] flex justify-center items-center bg-white rounded-full cursor-pointer active:shadow-inner active:bg-gray-200 transition;
+              }
+            }
+          }
+        }
+
+        .bottom {
+          @apply flex flex-col gap-4 px-4 py-3 lg:p-6 shrink-0;
+
+          .order_infor {
+            @apply flex flex-col;
+
+            .total {
+              @apply flex justify-between items-center;
+            }
+
+            .quantity {
+              @apply flex justify-between text-sm text-gray-400;
+            }
+          }
+
+          .button_action {
+            @apply flex gap-2 items-center justify-center;
+          }
+        }
+      }
+    }
+  }
 }

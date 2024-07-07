@@ -1,7 +1,7 @@
 export const dynamic = 'force-dynamic'
 import { useShoppingCart } from '@/context/ShoppingCartContext'
 import { IMenuResponse } from '@/global/types'
-import { createOrder } from '@/repositories'
+import Utils from '@/utils'
 import React from 'react'
 
 interface ICardProps {
@@ -12,32 +12,31 @@ interface ICardProps {
 
 const Card: React.FC<ICardProps> = ({ data, userID }) => {
   const { increaseItemQuantity, isOpenedForTheFirstTime, toggleOpen } = useShoppingCart()
-  const [isClicked, setIsClicked] = React.useState(false)
 
   function handleClick() {
-    setIsClicked(true)
-    increaseItemQuantity(data?.title!)
+    increaseItemQuantity(data!)
 
     if (!isOpenedForTheFirstTime) {
       toggleOpen()
     }
-
-    // setTimeout(() => {
-    //   setIsClicked(false)
-    // }, timeout)
   }
 
   return (
-    <div className="wrapper-card">
-      <div className="card-img">
-        <img src={data?.image} />
+    <div className="wrapper_card">
+      <div className="image">
+        <img src={data?.image} alt="food-image" />
       </div>
-      <div className="card-body">
-        <h1 className="card-title">{data?.title}</h1>
-        <div className="card-desc">{data?.description}</div>
-        <div className="card-desc">{data?.price}</div>
+      <div className="p-6">
+        <h5 className="title">{data?.title}</h5>
       </div>
-      {userID && <button onClick={handleClick}>Order</button>}
+      {userID && (
+        <div className="action">
+          <button type="button" onClick={handleClick}>
+            Order
+          </button>
+          <i className="hidden xl:block">{Utils.useFormatVND(data?.price!)}</i>
+        </div>
+      )}
     </div>
   )
 }

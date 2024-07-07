@@ -31,7 +31,6 @@ export default function RootLayout({
       <body className={(fontHeading.variable, fontBody.variable, 'antialiased')}>
         <ShoppingCartProvider>
           <ShoppingCart />
-
           {children}
         </ShoppingCartProvider>
       </body>

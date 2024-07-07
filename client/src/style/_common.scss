@@ -2,30 +2,78 @@ html {
   scroll-behavior: smooth;
 }
 body {
-  @apply overflow-x-hidden flex flex-col gap-2 container   bg-gray-100 p-2;
+  @apply overflow-hidden;
   @apply lg:gap-4;
+  @apply bg-gradient-to-r from-green to-blue-400 dark:from-dark-500 dark:to-dark-700 dark:text-white;
   margin: 0 auto !important;
 }
-::-webkit-scrollbar {
-  width: 0.75rem;
+.template {
+  .wrapper_child {
+    @apply gap-6 px-5 m-0 py-[1.5rem] lg:mb-0 md:mb-16 sm:px-20 max-w-screen-2xl md:px-32 lg:px-36 xl:px-48 transition-colors duration-500;
+
+    .navbar {
+      @apply flex flex-col overflow-hidden bg-gray-50 dark:bg-dark-500 shadow-custom-light dark:shadow-custom-dark rounded-2xl;
+    }
+  }
 }
 
-::-webkit-scrollbar-track {
-  background: white;
-  border-radius: 2rem;
-  margin-block: 0.5rem;
+@layer utilities {
+  /* Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+
+  .word {
+    display: block;
+  }
+
+  .word span {
+    @apply text-indigo-700 dark:text-violet-300 relative;
+  }
+
+  .word span::after {
+    content: '';
+    width: 8px;
+    height: 100%;
+    background: rgb(67 56 202 / var(--tw-text-opacity));
+    display: block;
+    position: absolute;
+    right: -10px;
+    top: 0;
+    animation: blink 0.5s ease infinite alternate-reverse;
+  }
+
+  @keyframes blink {
+    from {
+      opacity: 100%;
+    }
+
+    to {
+      opacity: 0%;
+    }
+  }
+
+  .word.empty {
+    visibility: hidden;
+  }
+
+  .word.empty span::after {
+    visibility: visible;
+    right: 0;
+  }
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-dark border-2 border-white rounded-2xl;
+  background-image: linear-gradient(to right bottom, #00f260, #0575e6);
+  border-radius: 5px;
 }
 
-.template {
-  @apply flex flex-col gap-2;
-  @apply lg:gap-4;
-}
-
-.layout-legals {
-  @apply bg-white max-w-[768px] mx-auto rounded-2xl p-6 flex flex-col items-center gap-6;
-  @apply lg:p-8 lg:gap-8;
+::-webkit-scrollbar {
+  width: 8px;
+  height: 0px;
 }

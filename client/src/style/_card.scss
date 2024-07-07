@@ -1,31 +1,19 @@
-.wrapper-card {
-  @apply flex gap-5 relative;
-  padding-top: 10px;
-  border-bottom: 1px solid #c2c0c0;
-  padding-bottom: 10px;
+.wrapper_card {
+  @apply relative flex flex-col mt-10  bg-gray-100 text-indigo-700 shadow-md bg-clip-border rounded-xl w-full xl:max-w-[300px];
 
-  .card-img {
-    @apply w-[100px] h-[100px] overflow-hidden rounded-md;
+  .image {
+    @apply relative mx-4 -mt-7 overflow-hidden text-gray-300  bg-clip-border rounded-xl shadow-custom-light;
   }
 
-  .card-body {
-    @apply flex flex-col;
-    h1 {
-      @apply font-bold text-xl;
-    }
-
-    .card-desc {
-      font-size: 13px;
-      color: #464646;
-      display: block;
-      padding-top: 5px;
-      line-height: 1.6em;
-      max-width: 600px;
-      @apply hidden md:flex flex-wrap;
-    }
+  .title {
+    @apply block line-clamp-2 mb-2 font-kaushan text-xl antialiased font-semibold leading-snug tracking-normal;
   }
 
-  button {
-    @apply absolute right-0 bottom-2 rounded-sm p-1 bg-blue-500 text-white h-[30px];
+  .action {
+    @apply mt-auto px-6 py-4 flex justify-between items-center;
+
+    button {
+      @apply w-full xl:w-8/12 px-5 py-2 my-2 rounded-full bg-gradient-to-r from-green to-blue-400 text-white focus:outline-none;
+    }
   }
 }

@@ -2,54 +2,31 @@
 
 import React from 'react'
 
-import Image from 'next/image'
-import Link from 'next/link'
-
 import { CiTrash } from 'react-icons/ci'
-import { GoPlus } from 'react-icons/go'
-import {
-  AiOutlineMinus,
-  AiOutlinePlus,
-  AiOutlineInfo,
-  AiOutlineLoading3Quarters,
-} from 'react-icons/ai'
+import { AiOutlineMinus, AiOutlinePlus, AiOutlineLoading3Quarters } from 'react-icons/ai'
 import { useShoppingCart } from '@/context/ShoppingCartContext'
+import { IMenuResponse } from '@/global/types'
+import Utils from '@/utils'
 
-function Item({ name, quantity }: { name: string; quantity: number }) {
-  const [data, setData] = React.useState(null)
-  console.log(name)
+function Item({ data }: { data: IMenuResponse }) {
   const { increaseItemQuantity, decreaseItemQuantity, removeItem, toggleOpen } = useShoppingCart()
 
+  let finalPrice = data?.price || 0
 
-  //   const slug = data ? getSmakSlug(data) : null
+  finalPrice = Number(finalPrice.toFixed())
 
-  //   let discountAmount = 0
-  //   let finalPrice = data?.price || 0
-
-  //   if (data?.discountPercentage) {
-  //     discountAmount = (data?.price * data?.discountPercentage) / 100
-  //     finalPrice = data?.price - discountAmount
-  //   }
-
-  //   finalPrice = finalPrice.toFixed()
-
-  //   const totalPrice = quantity * finalPrice
-  //   const formattedPrice = (totalPrice / 100).toFixed(2)
-
-  function handleLinkClick() {
-    toggleOpen()
-  }
+  const totalPrice = data.quantity! * finalPrice
 
   function handleClickPlus() {
-    increaseItemQuantity(id)
+    increaseItemQuantity(data)
   }
 
   function handleClickMinus() {
-    decreaseItemQuantity(id)
+    decreaseItemQuantity(data)
   }
 
   function handleClickTrash() {
-    removeItem(id)
+    removeItem(data.title)
   }
 
   if (!data)
@@ -65,51 +42,27 @@ function Item({ name, quantity }: { name: string; quantity: number }) {
     )
 
   return (
-    <article className="relative shadow-md p-6 flex flex-col gap-2 bg-white rounded-2xl overflow-hidden">
-      {/* <div className="absolute inset-0 h-full w-full flex justify-center items-center opacity-25">
-        <Image
-          className="object-cover brightness-150 p-2"
-          src={`/Images/ShoppingCart/Item${quantity > 5 ? 'Default' : quantity}.png`}
-          fill
-          alt="image"
-        />
-      </div>
-      <div className="relative flex justify-between items-center">
-        <div className="flex flex-col">
-          <Link
-            onClick={handleLinkClick}
-            href={`/smaki/${slug}`}
-            className="text-[1.25rem] hover:underline"
-          >
-            {data?.title}
-          </Link>
-          <p className="text-sm">Smak: {data?.smak}</p>
+    <article className="items">
+      <div className="remove">
+        <div className="title">
+          <span>{data?.title}</span>
         </div>
-        <button
-          onClick={handleClickTrash}
-          className="active:shadow-inner active:bg-gray-200 hover:bg-gray-100 hover:text-red-500 transition bg-white w-[2.5rem] h-[2.5rem] text-[1.5rem] flex justify-center items-center rounded-full"
-        >
+        <button onClick={handleClickTrash} className="button_action">
           <CiTrash />
         </button>
       </div>
-      <div className="relative flex justify-between items-center">
-        <div className="flex items-center gap-2">
-          <span
-            onClick={handleClickMinus}
-            className="hover:bg-gray-100 w-[2.25rem] h-[2.25rem] flex justify-center items-center bg-white rounded-full transition cursor-pointer active:shadow-inner active:bg-gray-200 transition"
-          >
+      <div className="info_item">
+        <div>
+          <span onClick={handleClickMinus} className="icons">
             <AiOutlineMinus />
           </span>
-          <p>{quantity} szt.</p>
-          <span
-            onClick={handleClickPlus}
-            className="hover:bg-gray-100 w-[2.25rem] h-[2.25rem] flex justify-center items-center bg-white rounded-full transition cursor-pointer active:shadow-inner active:bg-gray-200 transition"
-          >
+          <p>{data.quantity} Phần</p>
+          <span onClick={handleClickPlus} className="icons">
             <AiOutlinePlus />
           </span>
         </div>
-        <p className="text-[1.25rem]">{formattedPrice} zł</p>
-      </div> */}
+        <p className="text-[1.25rem]">{Utils.useFormatVND(totalPrice)}</p>
+      </div>
     </article>
   )
 }

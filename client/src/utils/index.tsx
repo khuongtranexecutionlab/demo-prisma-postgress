@@ -1,5 +1,6 @@
 import React from 'react'
 import * as Fetch from './fetch'
+import { IMenuResponse } from '@/global/types'
 
 export interface WindowDimentions {
   width: number
@@ -35,6 +36,8 @@ export interface IUtils {
   ) => void
   useReducer: <T>(reducer: (state: T, newState: T) => T, initialState?: T) => [T, React.Dispatch<T>]
   useDebounce: <T>(value: T, delay: number, callback: (value?: T) => Promise<void> | void) => void
+  useFormatVND: (price: number) => string
+  useGenerateData: (data: IMenuResponse[]) => IMenuResponse[]
 }
 const Utils: IUtils = {
   call: {
@@ -83,6 +86,30 @@ const Utils: IUtils = {
     }, [value, delay])
 
     return debouncedValue
+  },
+  useFormatVND: (price: number) => {
+    const formattedPrice = Number(price).toFixed(0)
+    return formattedPrice.replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '₫'
+  },
+  useGenerateData: (data: IMenuResponse[]) => {
+    const response = data
+      .filter((i) => !i.title.startsWith('Đồ ăn thêm') && !i.title.startsWith('Cơm thêm'))
+      .map((i) => ({
+        title: i.title,
+        description: i.description,
+        image: i.image,
+        price: i.title === 'Trứng ốp la' ? 5000 : 30000,
+      }))
+    const newArr = [
+      ...response,
+      {
+        title: 'Salad trộn dầu giấm ăn kèm',
+        description: '',
+        image: 'assests/sallad.webp',
+        price: 15000,
+      },
+    ]
+    return newArr
   },
 }
 

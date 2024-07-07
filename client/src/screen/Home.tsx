@@ -7,10 +7,6 @@ import { type User } from 'next-auth'
 import Utils from '@/utils'
 import { useServiceContext } from '@/app/context/Socket'
 import { ENDPOINT_SERVICE } from '@/global/constant'
-import Header from './Header'
-import Menu from './Menu'
-import ProofPayment from './ProofPayment'
-import Information from './Information'
 
 interface IHomeProps {
   data: IMenuResponse[] | undefined
@@ -31,9 +27,11 @@ const Home: React.FC<IHomeProps> = ({ data, auth }) => {
   // )
   return (
     <main className="wrapper_home">
-      <Information />
-      <Menu auth={auth} data={data} />
-      <ProofPayment />
+      <section className="wrapper_menu">
+        {data?.map((i, idx) => (
+          <Card data={i} key={idx} userID={auth?.id} id={0} />
+        ))}
+      </section>
     </main>
   )
 }

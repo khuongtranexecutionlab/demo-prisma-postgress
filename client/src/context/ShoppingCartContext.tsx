@@ -1,19 +1,19 @@
 'use client'
 
+import { IMenuResponse } from '@/global/types'
 import { createContext, useContext } from 'react'
 import { useState, useEffect } from 'react'
 
 interface ShoppingCartContextType {
   isOpenedForTheFirstTime: boolean
   isCounting: boolean
-  items: any[]
+  items: IMenuResponse[]
   isOpen: boolean
   toggleOpen: () => void
-  increaseItemQuantity: (name: string) => void
-  decreaseItemQuantity: (name: string) => void
-  removeItem: (id: number) => void
+  increaseItemQuantity: (data: IMenuResponse) => void
+  decreaseItemQuantity: (data: IMenuResponse) => void
+  removeItem: (title: string) => void
   clearItems: () => void
-  deliveryPrice: number
   totalItemsPrice: number
   totalItemsCount: number
   totalPrice: number | string
@@ -30,7 +30,6 @@ export const ShoppingCartContext = createContext<ShoppingCartContextType>({
   decreaseItemQuantity: () => {},
   removeItem: () => {},
   clearItems: () => {},
-  deliveryPrice: 0,
   totalItemsPrice: 0,
   totalItemsCount: 0,
   totalPrice: '0',
@@ -53,8 +52,7 @@ export function ShoppingCartProvider({ children }: IShoppingCartProps) {
   const [isCounting, setIsCounting] = useState<boolean>(true)
 
   const totalItemsCount = countTotalItems()
-  const deliveryPrice = countDeliveryPrice()
-  const totalPrice = isCounting ? '...' : totalItemsPrice + deliveryPrice
+  const totalPrice = isCounting ? '...' : totalItemsPrice
 
   useEffect(() => {
     localStorage.setItem('cartItems', JSON.stringify(items))
@@ -62,16 +60,6 @@ export function ShoppingCartProvider({ children }: IShoppingCartProps) {
     setIsCounting(true)
     countTotalItemsPrice()
   }, [items])
-
-  function countDeliveryPrice() {
-    let value = 2000
-
-    if (totalItemsPrice >= 15000) {
-      value = 0
-    }
-
-    return value
-  }
 
   function clearItems() {
     setItems([])
@@ -87,29 +75,14 @@ export function ShoppingCartProvider({ children }: IShoppingCartProps) {
     return value
   }
 
-  async function countTotalItemsPrice() {
+  function countTotalItemsPrice() {
     const initialValue = 0
 
-    const value = await items.reduce(
-      async (accumulatorPromise: any, item: { id: any; quantity: number }) => {
-        const accumulator = await accumulatorPromise
-        // const response = await getSmakById({ id: item.id })
-
-        // if (!response) return accumulator
-
-        // const data = JSON.parse(response)
-
-        // if (data?.discountPercentage) {
-        //   const discountAmount = (data.price * data.discountPercentage) / 100
-        //   const finalPrice = (data.price - discountAmount).toFixed()
-
-        //   return accumulator + Number(finalPrice) * item.quantity
-        // } else {
-        //   return accumulator + data?.price * item.quantity
-        // }
-      },
-      Promise.resolve(initialValue)
-    )
+    const value = items.reduce((accumulatorPromise: number, item: IMenuResponse) => {
+      const accumulator = accumulatorPromise
+      const a = accumulator + item.price! * item.quantity!
+      return a
+    }, initialValue)
 
     setTotalItemsPrice(value)
     setIsCounting(false)
@@ -122,20 +95,20 @@ export function ShoppingCartProvider({ children }: IShoppingCartProps) {
     setIsOpen(!isOpen)
   }
 
-  function removeItem(id: number) {
-    setItems((currentItems: any[]) => {
-      return currentItems.filter((item: { id: number }) => item.id !== id)
+  function removeItem(title: string) {
+    setItems((currentItems: IMenuResponse[]) => {
+      return currentItems.filter((item) => item.title !== title)
     })
   }
 
-  function increaseItemQuantity(name: string) {
-    setItems((currentItems: any[]) => {
-      if (currentItems.find((item: { name: string }) => item.name === name) == null) {
-        return [{ name, quantity: 1 }, ...currentItems]
+  function increaseItemQuantity(data: IMenuResponse) {
+    setItems((currentItems: IMenuResponse[]) => {
+      if (currentItems.find((item) => item.title === data.title) == null) {
+        return [{ ...data, quantity: 1 }, ...currentItems]
       } else {
-        return currentItems.map((item: { name: string; quantity: number }) => {
-          if (item.name === name) {
-            return { ...item, quantity: item.quantity + 1 }
+        return currentItems.map((item) => {
+          if (item.title === data.title) {
+            return { ...item, quantity: item.quantity! + 1 }
           } else {
             return item
           }
@@ -144,15 +117,15 @@ export function ShoppingCartProvider({ children }: IShoppingCartProps) {
     })
   }
 
-  function decreaseItemQuantity(name: string) {
-    setItems((currentItems: any[]) => {
-      const item = currentItems.find((item: { name: string }) => item.name === name)
+  function decreaseItemQuantity(data: IMenuResponse) {
+    setItems((currentItems: IMenuResponse[]) => {
+      const item = currentItems.find((item) => item.title === data.title)
       if (item && item.quantity === 1) {
-        return currentItems.filter((item: { name: string }) => item.name !== name)
+        return currentItems.filter((item) => item.title !== data.title)
       } else {
-        return currentItems.map((item: { name: string; quantity: number }) => {
-          if (item.name === name) {
-            return { ...item, quantity: item.quantity - 1 }
+        return currentItems.map((item) => {
+          if (item.title === data.title) {
+            return { ...item, quantity: item.quantity! - 1 }
           } else {
             return item
           }
@@ -173,7 +146,6 @@ export function ShoppingCartProvider({ children }: IShoppingCartProps) {
         decreaseItemQuantity,
         removeItem,
         clearItems,
-        deliveryPrice,
         totalItemsPrice,
         totalItemsCount,
         totalPrice,

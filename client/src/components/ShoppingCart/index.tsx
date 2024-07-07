@@ -9,25 +9,18 @@ import React from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Button from '@/components/Button'
 
-import Delivery from './Delivery'
 import Item from './Item'
 
 import { MdOutlineShoppingCart, MdClose } from 'react-icons/md'
 
 import BottomRightShoppingCartIcon from './BottomRightShoppingCartIcon'
 import { useShoppingCart } from '@/context/ShoppingCartContext'
+import Utils from '@/utils'
 
 function ShoppingCart() {
-  const router = useRouter()
-  const pathname = usePathname()
-
   const [isClicked, setIsClicked] = React.useState(false)
 
-  const { isCounting, items, isOpen, toggleOpen, totalPrice, totalItemsCount, deliveryPrice } =
-    useShoppingCart()
-
-  const formattedTotalPrice =
-    typeof totalPrice == 'number' ? (totalPrice / 100).toFixed(2) : totalPrice
+  const { isCounting, items, isOpen, toggleOpen, totalPrice, totalItemsCount } = useShoppingCart()
 
   React.useEffect(() => {
     if (isOpen) {
@@ -44,7 +37,7 @@ function ShoppingCart() {
   }
 
   return (
-    <>
+    <div className="wrapper_cart">
       <AnimatePresence>
         {isOpen && (
           <>
@@ -60,11 +53,11 @@ function ShoppingCart() {
               exit={{
                 opacity: 0,
               }}
-              className="hidden cursor-pointer bg-[rgba(0,0,0,0.4)] fixed inset-0 z-40 backdrop-blur-md p-4 lg:flex justify-end"
-            ></motion.div>
+              className="toggle"
+            />
             {/*Shopping Cart Wrapper*/}
             <motion.div
-              className="fixed z-40 w-full lg:w-2/5 h-full right-0 top-0 lg:p-4"
+              className="content"
               initial={{
                 x: '100%',
               }}
@@ -75,25 +68,22 @@ function ShoppingCart() {
                 x: '100%',
               }}
             >
-              <aside className="bg-white h-full flex flex-col lg:rounded-2xl">
+              <aside>
                 {/*Heading*/}
-                <div className="flex justify-between px-4 py-3 lg:p-6 shrink-0">
-                  <div className="flex items-center gap-2 grow text-[1.5rem]">
+                <div className="heading">
+                  <div className="order-title">
                     <MdOutlineShoppingCart />
                     Đơn Hàng
                   </div>
                   {/*Close Icon*/}
-                  <button
-                    onClick={toggleOpen}
-                    className="hover:bg-gray-100 active:bg-gray-200 transition active:shadow-inner bg-white w-[3rem] h-[3rem] text-[1.5rem] flex justify-center items-center rounded-full"
-                  >
+                  <button onClick={toggleOpen}>
                     <MdClose />
                   </button>
                 </div>
                 <AnimatePresence mode="popLayout">
                   {items.length ? (
                     <motion.div
-                      className="flex flex-col grow overflow-hidden"
+                      className="wrapper_list"
                       key="listOfItems"
                       initial={{
                         opacity: 0,
@@ -106,15 +96,12 @@ function ShoppingCart() {
                       }}
                     >
                       {/*List of items*/}
-                      <ul className="shadow-inner p-2 lg:p-6 flex flex-col gap-2 lg:gap-4 bg-gray-100 overflow-y-auto overflow-x-hidden grow">
+                      <ul>
                         <AnimatePresence mode="popLayout">
-                          <li key={'delivery'}>
-                            <Delivery price={deliveryPrice} />
-                          </li>
                           {items.map((item, idx) => (
                             <motion.li
                               layout
-                              key={item.id}
+                              key={item.title}
                               initial={{
                                 scale: 0,
                               }}
@@ -125,28 +112,30 @@ function ShoppingCart() {
                                 scale: 0,
                               }}
                             >
-                              <Item name={item.name} quantity={item.quantity} />
+                              <Item data={item} />
                             </motion.li>
                           ))}
                         </AnimatePresence>
                       </ul>
                       {/*Bottom*/}
-                      <div className="flex flex-col gap-4 px-4 py-3 lg:p-6 shrink-0">
-                        <div className="flex flex-col">
-                          <div className="flex justify-between items-center">
-                            <p>Suma łącznie:</p>
-                            <p className="text-[1.25rem]">{formattedTotalPrice} zł</p>
+                      <div className="bottom">
+                        <div className="order_infor">
+                          <div className="total">
+                            <p>Tổng:</p>
+                            <p className="text-[1.25rem]">
+                              {Utils.useFormatVND(Number(totalPrice))}{' '}
+                            </p>
                           </div>
-                          <div className="flex justify-between text-sm text-gray-400">
-                            <p>Ilość:</p>
-                            <p>{totalItemsCount} szt.</p>
+                          <div className="quantity">
+                            <p>Số lượng:</p>
+                            <b>{totalItemsCount}</b>
                           </div>
                         </div>
                         <Button
                           disabled={isClicked || isCounting}
                           appearance="fill"
                           onClick={handleButtonClick}
-                          className="flex gap-2 items-center justify-center"
+                          className="button_action"
                         >
                           {isClicked ? (
                             <>
@@ -188,7 +177,7 @@ function ShoppingCart() {
       </AnimatePresence>
       {/*Shopping cart Icon*/}
       <BottomRightShoppingCartIcon />
-    </>
+    </div>
   )
 }
 
