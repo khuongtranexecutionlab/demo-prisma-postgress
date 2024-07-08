@@ -35,8 +35,8 @@ export default function Navbar() {
   }, [session])
 
   return (
-    <div className="flex justify-between px-5 py-3 my-3">
-      <div className="flex gap-2">
+    <div className="flex justify-between py-3 my-3">
+      <div className="flex">
         <span className="text-xl font-bold text-blue-800 dark:text-violet-300 border-b-4 border-green dark:border-violet-200 md:text-2xl">
           {data?.user?.name}
         </span>

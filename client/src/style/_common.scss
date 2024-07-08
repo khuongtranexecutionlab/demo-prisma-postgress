@@ -2,18 +2,15 @@ html {
   scroll-behavior: smooth;
 }
 body {
-  @apply overflow-hidden;
   @apply lg:gap-4;
   @apply bg-gradient-to-r from-green to-blue-400 dark:from-dark-500 dark:to-dark-700 dark:text-white;
   margin: 0 auto !important;
 }
 .template {
-  .wrapper_child {
-    @apply gap-6 px-5 m-0 py-[1.5rem] lg:mb-0 md:mb-16 sm:px-20 max-w-screen-2xl md:px-32 lg:px-36 xl:px-48 transition-colors duration-500;
+  @apply px-5 m-auto py-[1.5rem] lg:mb-0 md:mb-16 sm:px-20 max-w-screen-2xl md:px-32 lg:px-36 xl:px-48 min-h-screen;
 
-    .navbar {
-      @apply flex flex-col overflow-hidden bg-gray-50 dark:bg-dark-500 shadow-custom-light dark:shadow-custom-dark rounded-2xl;
-    }
+  .wrapper_child {
+    @apply flex flex-col p-6 bg-gray-50 dark:bg-dark-500 shadow-custom-light dark:shadow-custom-dark rounded-2xl gap-6 transition-colors duration-500 h-[90vh] overflow-hidden;
   }
 }
 
@@ -74,6 +71,5 @@ body {
 }
 
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 0px;
+  display: none;
 }
